@@ -1,13 +1,31 @@
-[app]
-title = Device Info Sender
-package.name = deviceinfo
-package.domain = org.test
-source.dir = .
-source.include_exts = py,png,jpg,kv,atlas
-version = 0.1
-requirements = python3,kivy,requests,urllib3,chardet,idna,certifi
-orientation = portrait
-fullscreen = 0
-android.permissions = INTERNET, ACCESS_NETWORK_STATE
-android.api = 33
-android.minapi = 21
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Build with Buildozer Action
+        uses: subZeroS/buildozer-action@v1
+        id: buildozer
+        with:
+          command: buildozer -v android debug
+          subfolder: .
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: ${{ steps.buildozer.outputs.filename }}
