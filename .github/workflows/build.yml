@@ -25,13 +25,10 @@ jobs:
             autoconf libtool pkg-config zlib1g-dev libncurses5-dev \
             libncursesw5-dev libffi-dev libssl-dev libltdl-dev autopoint gettext
           python -m pip install --upgrade pip
-          python -m pip install buildozer "cython<3.0.0"
+          python -m pip install "buildozer<3.0.0" "cython<3.0.0"
 
-      - name: Initialize and Build
+      - name: Build APK
         run: |
-          rm -f buildozer.spec
-          python -m buildozer init
-          sed -i 's/p4a.branch = master/# p4a.branch = master/g' buildozer.spec
           yes | python -m buildozer -v android debug
         env:
           ACCEPT_BUILD_TOOLS_CHECKSUM: "true"
@@ -41,5 +38,6 @@ jobs:
         with:
           name: app-release
           path: bin/*.apk
+
 
 
