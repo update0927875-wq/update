@@ -29,7 +29,8 @@ jobs:
         run: |
           rm -f buildozer.spec
           python -m buildozer init
-          python -m buildozer -v android debug --accept-sdk-license
+          yes | android-sdk-license || true
+          yes | python -m buildozer -v android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
